@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ "$1" = "push-all" ]; then
+
+	if [ "$2" = "" ]; then
+		echo "No commit message passed"
+		exit 0
+	fi
+
+	git add -A
+	git commit -m "$2"
+	branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+	remotes=`git remote | grep -E '$'`
+	for remote in $remotes; do
+		git push $remote $branch
+	done
+
+elif [ "$1" = "help" ]; then
+	echo "Commands list:
+push-all: To commit and push all the changes to all repos
+help: To get this help text"
+
+else
+	echo "No command to execute"
+fi
